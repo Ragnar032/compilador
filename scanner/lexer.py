@@ -118,12 +118,15 @@ class Lexer:
                 self.pos += 1
             else:
                 final_token_id = next_state
+                
                 if next_state == 100:
                     if lexeme in self.reserved_words:
                         final_token_id = self.reserved_words[lexeme]
 
                 token_name = self.token_names.get(final_token_id, "DESCONOCIDO")
-                if state not in [0, 6, 9, 10, 11, 12]:
+                
+                
+                if state not in [0, 5, 6, 9, 10, 11, 12]:
                      return (final_token_id, token_name, lexeme)
                 else:
                     lexeme += char
@@ -131,9 +134,8 @@ class Lexer:
                     return (final_token_id, token_name, lexeme)
                     
         return None
-
 # --- PRUEBA FINAL ---
-    codigo = """
+codigo = """
     // Variables
     int x = 10;
     double y = 20.5;
