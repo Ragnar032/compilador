@@ -8,7 +8,7 @@ class Lexer:
             "and": 205, "or": 206, "not": 207, "print": 208, "class": 209,
             "public": 210, "private": 211, "static": 212, "main": 213, "return": 214,
             "if": 215, "else": 216, "while": 217, "for": 218, "break": 219,
-            "TRUE": 220, "FALSE": 221
+            "true": 220, "false": 221
         }
         self.token_names = {
             100: "IDENTIFICADOR", 
