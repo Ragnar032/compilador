@@ -1,0 +1,21 @@
+LEXEMA                         TOKEN      RENGLON   
+-------------------------------------------------------
+int                            200        1         
+x                              100        1         
+=                              121        1         
+10                             101        1         
+;                              122        1         
+double                         201        2         
+precio                         100        2         
+=                              121        2         
+50.5                           102        2         
+;                              122        2         
+String                         203        3         
+mensaje                        100        3         
+=                              121        3         
+"Hola Mundo"                   103        3         
+;                              122        3         
+/*
+  Esto es un comentario de bloque
+  que vamos a dejar sin cerrar para probar el error 507
+  * 507        7         

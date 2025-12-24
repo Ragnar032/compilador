@@ -1,0 +1,10 @@
+int x = 10;
+double precio = 50.5;
+String mensaje = "Hola Mundo";
+
+// Esto es un comentario de linea
+
+/*
+  Esto es un comentario de bloque
+  que vamos a dejar sin cerrar para probar el error 507
+  *
