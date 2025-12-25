@@ -2,6 +2,7 @@ from src.lexer.matrix import MATRIX
 from src.lexer.reserved import RESERVED_WORDS
 from src.lexer.tokens import TOKENS
 from src.lexer.node import Node
+from src.lexer.errors import ERRORS
 
 class Lexer:
     def __init__(self, source_code):
@@ -12,6 +13,7 @@ class Lexer:
         self.matrix = MATRIX
         self.reserved_words = RESERVED_WORDS
         self.tokens = TOKENS
+        self.errors = ERRORS
         
         self.head = None
         self.tail = None

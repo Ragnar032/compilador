@@ -1,26 +1,32 @@
 # src/tokens.py
 from src.lexer.reserved import RESERVED_WORDS
-
+from src.lexer.errors import ERRORS
 TOKENS = {
     100: "IDENTIFICADOR", 
     101: "ENTERO", 
     102: "REAL", 
     103: "CADENA",
-    104: "SUMA", 105: "RESTA", 106: "MULT", 107: "DIV", 108: "MODULO",
-    109: "L_PAREN", 110: "R_PAREN", 111: "L_LLAVE", 112: "R_LLAVE",
-    113: "L_CORCHETE", 114: "R_CORCHETE", 
-    115: "IGUAL_QUE", 116: "DIFERENTE", 117: "MAYOR_IGUAL", 118: "MENOR_IGUAL", 
-    119: "MAYOR", 120: "MENOR", 121: "ASIGNACION", 
-    122: "PUNTO_COMA", 123: "COMA", 124: "PUNTO",
-    
+    104: "SUMA", 
+    105: "RESTA", 
+    106: "MULT", 
+    107: "DIV", 
+    108: "MODULO",
+    109: "L_PAREN", 
+    110: "R_PAREN", 
+    111: "L_LLAVE", 
+    112: "R_LLAVE",
+    113: "L_CORCHETE", 
+    114: "R_CORCHETE", 
+    115: "IGUAL_QUE", 
+    116: "DIFERENTE", 
+    117: "MAYOR_IGUAL", 
+    118: "MENOR_IGUAL", 
+    119: "MAYOR", 
+    120: "MENOR", 
+    121: "ASIGNACION", 
+    122: "PUNTO_COMA", 
+    123: "COMA", 
+    124: "PUNTO",
     **{v: k for k, v in RESERVED_WORDS.items()},
-    
-    500: "ERR_INVALIDO", 
-    501: "ERR_NUMERO", 
-    502: "ERR_OPERADOR", 
-    503: "ERR_STRING",
-    504: "ERR_ID_INVALIDO",
-    505: "ERR_COMENTARIO_ABIERTO",
-    506: "ERR_REAL_MAL_FORMADO",
-    507: "ERR_COMENTARIO_INCOMPLETO" 
+    **ERRORS,
 }
