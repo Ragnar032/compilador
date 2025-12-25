@@ -26,7 +26,7 @@ class ManagerLexer:
             with open(ruta_salida, "w", encoding="utf-8") as f:
                 # Encabezados (3 columnas: Lexema, Token, Renglon)
                 header = f"{'LEXEMA':<30} {'TOKEN':<10} {'RENGLON':<10}"
-                linea_sep = "-" * 55 
+                linea_sep = "-" * 60 
                 
                 print(f"\n{header}")
                 print(linea_sep)
