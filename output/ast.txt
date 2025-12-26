@@ -1,0 +1,145 @@
+{
+    "tipo": "Programa",
+    "contenido": {
+        "tipo": "ClasePrincipal",
+        "nombre": "MiPrograma",
+        "cuerpo": [
+            {
+                "tipo": "Declaracion",
+                "dt": "int",
+                "id": "variableGlobal",
+                "valor": {
+                    "tipo": "Literal",
+                    "valor": "100"
+                }
+            },
+            {
+                "tipo": "MetodoMain",
+                "sentencias": [
+                    {
+                        "tipo": "Declaracion",
+                        "dt": "int",
+                        "id": "a",
+                        "valor": {
+                            "tipo": "Literal",
+                            "valor": "10"
+                        }
+                    },
+                    {
+                        "tipo": "Declaracion",
+                        "dt": "int",
+                        "id": "b",
+                        "valor": {
+                            "tipo": "Literal",
+                            "valor": "20"
+                        }
+                    },
+                    {
+                        "tipo": "Declaracion",
+                        "dt": "int",
+                        "id": "resultado",
+                        "valor": {
+                            "tipo": "OperacionBinaria",
+                            "op": "*",
+                            "izq": {
+                                "tipo": "OperacionBinaria",
+                                "op": "+",
+                                "izq": {
+                                    "tipo": "Literal",
+                                    "valor": "a"
+                                },
+                                "der": {
+                                    "tipo": "Literal",
+                                    "valor": "b"
+                                }
+                            },
+                            "der": {
+                                "tipo": "Literal",
+                                "valor": "5"
+                            }
+                        }
+                    },
+                    {
+                        "tipo": "If",
+                        "condicion": {
+                            "tipo": "OperacionBinaria",
+                            "op": "> ",
+                            "izq": {
+                                "tipo": "Literal",
+                                "valor": "resultado"
+                            },
+                            "der": {
+                                "tipo": "Literal",
+                                "valor": "50"
+                            }
+                        },
+                        "bloque_if": [
+                            {
+                                "tipo": "Declaracion",
+                                "dt": "int",
+                                "id": "x",
+                                "valor": {
+                                    "tipo": "Literal",
+                                    "valor": "1"
+                                }
+                            },
+                            {
+                                "tipo": "While",
+                                "condicion": {
+                                    "tipo": "OperacionBinaria",
+                                    "op": "< ",
+                                    "izq": {
+                                        "tipo": "Literal",
+                                        "valor": "x"
+                                    },
+                                    "der": {
+                                        "tipo": "Literal",
+                                        "valor": "10"
+                                    }
+                                },
+                                "cuerpo": [
+                                    {
+                                        "tipo": "Asignacion",
+                                        "id": "x",
+                                        "valor": {
+                                            "tipo": "OperacionBinaria",
+                                            "op": "+",
+                                            "izq": {
+                                                "tipo": "Literal",
+                                                "valor": "x"
+                                            },
+                                            "der": {
+                                                "tipo": "Literal",
+                                                "valor": "1"
+                                            }
+                                        }
+                                    }
+                                ]
+                            }
+                        ],
+                        "bloque_else": [
+                            {
+                                "tipo": "Asignacion",
+                                "id": "resultado",
+                                "valor": {
+                                    "tipo": "Literal",
+                                    "valor": "0"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "tipo": "Impresion",
+                        "argumento": {
+                            "tipo": "Literal",
+                            "valor": "resultado"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}
+
+¡Análisis Sintáctico Exitoso!
+El código cumple con todas las reglas gramaticales BNF.
