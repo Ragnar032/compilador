@@ -1,10 +1,18 @@
-int x = 10;
-double precio = 50.5;
-String mensaje = "Hola Mundo";
+// Nivel 1: Caracter inválido (Error 500)
+int dinero = 100; 
 
-// Esto es un comentario de linea
+// Nivel 2: String sin cerrar (Error 503)
+String nombre = "Juan Perez";
 
-/*
-  Esto es un comentario de bloque
-  que vamos a dejar sin cerrar para probar el error 507
-  *
+// Nivel 3: Operador ! incompleto (Error 502)
+// Se esperaba '!=' pero solo hay '!'
+if (a != b) { 
+    print(a); 
+}
+
+// Nivel 4: Número mal formado (Error 501 o 506)
+double valor = 12.3456;
+
+// Nivel 5: Comentario de bloque sin cerrar (Error 505)
+/* Esto es un comentario 
+   que se comió el final del archivo...*/

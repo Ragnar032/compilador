@@ -9,10 +9,15 @@ def main():
     codigo_fuente = FileManager.leer_archivo(ruta_input)
     
     if codigo_fuente is not None:
-        lexer = Lexer(codigo_fuente)
-        lista_tokens = lexer.run() 
-
-        FileManager.exportar_reporte(lista_tokens, ruta_output)
+        try:
+            lexer = Lexer(codigo_fuente)
+            lista_tokens = lexer.run() 
+            FileManager.exportar_reporte(lista_tokens, ruta_output)
+            
+        except Exception as e:
+            print(e)
+            with open(ruta_output, 'w', encoding='utf-8') as f:
+                f.write(str(e))
 
 if __name__ == "__main__":
     main()

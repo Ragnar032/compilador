@@ -70,6 +70,7 @@ class Lexer:
             if state == 0 and char not in [' ', '\t', '\n']:
                 start_line = self.line
 
+            # Manejo de comentarios de línea (//)
             if state == 6 and char == '/':
                  self.pos += 1 
                  while self.pos < len(self.source) and self.source[self.pos] != '\n':
@@ -80,14 +81,16 @@ class Lexer:
 
             next_state = self.matrix[state][col]
             
+
             if next_state < 100:
                 
+                # Manejo especial para comentarios de bloque (/* ... */)
                 if state == 8 and char == '/':
-                    state = 0  
-                    lexeme = ""     
-                    self.pos += 1   
-                    continue        
-
+                    state = 0      
+                    lexeme = ""    
+                    self.pos += 1  
+                    continue       
+                
                 if state == 0 and next_state == 0:
                     if char == '\n': self.line += 1
                     self.pos += 1
@@ -98,32 +101,47 @@ class Lexer:
                 if char != '\0': lexeme += char
                 if char == '\n': self.line += 1
                 self.pos += 1
+
             else:
                 final_token_id = next_state
                 
+                # Palabras reservadas
                 if next_state == 100:
                     if lexeme in self.reserved_words:
                         final_token_id = self.reserved_words[lexeme]
 
-                nodo_lexema = lexeme
-                nodo_linea = self.line
+          
+                if final_token_id >= 500:
+                    msg_error = self.errors.get(final_token_id, "Error Desconocido")
+                    linea_error = start_line if final_token_id in [505, 507] else self.line
+                    
+                    raise Exception(f"\n>>> ERROR FATAL DETECTADO <<<\n"
+                                    f"Línea: {linea_error}\n"
+                                    f"ID Error: {final_token_id}\n"
+                                    f"Descripción: {msg_error}\n"
+                                    f"Lexema causante: '{lexeme}'")
 
-                if final_token_id in [505, 507]:
-                    nodo_linea = start_line
-                    nodo_lexema = (lexeme[:15] + '...') if len(lexeme) > 15 else lexeme
-
+                
                 if state not in [0, 5, 6, 9, 10, 11, 12] and final_token_id < 500:
-                    nodo_linea = self.line 
-                    self.agregar_nodo(nodo_lexema, final_token_id, nodo_linea)
+                     self.agregar_nodo(lexeme, final_token_id, self.line)
                 else:
-                    if char != '\0': lexeme += char
-                    if char == '\n': self.line += 1
-                    self.pos += 1
-                    nodo_lexema = lexeme
-                    self.agregar_nodo(nodo_lexema, final_token_id, start_line)
+                     if char != '\0': lexeme += char
+                     if char == '\n': self.line += 1
+                     self.pos += 1 
+                     self.agregar_nodo(lexeme, final_token_id, start_line)
 
+                # Reset
                 state = 0
                 lexeme = ""
                 start_line = self.line
-        
+   
+        if state in [7, 8]:
+             msg_error = self.errors.get(505, "Comentario bloque sin cerrar")
+             raise Exception(f"\n>>> ERROR FATAL DETECTADO <<<\n"
+                            f"Línea: {start_line}\n"
+                            f"ID Error: 505\n"
+                            f"Descripción: {msg_error} (Fin de archivo inesperado)\n"
+                            f"Lexema pendiente: '{lexeme} ...'")
+
+
         return self.head

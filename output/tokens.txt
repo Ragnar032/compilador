@@ -1,21 +1,30 @@
 LEXEMA                         TOKEN      RENGLON   
 ------------------------------------------------------------
-int                            200        1         
-x                              100        1         
-=                              121        1         
-10                             101        1         
-;                              122        1         
-double                         201        2         
-precio                         100        2         
+int                            200        2         
+dinero                         100        2         
 =                              121        2         
-50.5                           102        2         
+100                            101        2         
 ;                              122        2         
-String                         203        3         
-mensaje                        100        3         
-=                              121        3         
-"Hola Mundo"                   103        3         
-;                              122        3         
-/*
-  Esto es un comentario de bloque
-  que vamos a dejar sin cerrar para probar el error 507
-  * 507        7         
+String                         203        5         
+nombre                         100        5         
+=                              121        5         
+"Juan Perez"                   103        5         
+;                              122        5         
+if                             215        9         
+(                              109        9         
+a                              100        9         
+!=                             116        9         
+b                              100        9         
+)                              110        9         
+{                              111        9         
+print                          208        10        
+(                              109        10        
+a                              100        10        
+)                              110        10        
+;                              122        10        
+}                              112        11        
+double                         201        14        
+valor                          100        14        
+=                              121        14        
+12.3456                        102        14        
+;                              122        14        
