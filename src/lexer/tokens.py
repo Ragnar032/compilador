@@ -1,4 +1,4 @@
-# src/tokens.py
+# src/lexer/tokens.py
 from src.lexer.reserved import RESERVED_WORDS
 from src.lexer.errors import ERRORS
 TOKENS = {

@@ -1,13 +1,38 @@
 # src/parser/parser.py
+from src.lexer.tokens import TOKENS
 
 class Sintactico:
     def __init__(self, lista_tokens):
         self.actual = lista_tokens
         self.hay_error = False
-    # MÉTODOS AUXILIARES    
+
+    # MÉTODOS AUXILIARES
+
+    
+    def reportar_error(self, esperado):
+        self.hay_error = True
+        lexema_encontrado = self.actual.lexema if self.actual else "EOF"
+        linea = self.actual.renglon if self.actual else "Final"
+        
+        
+        if isinstance(esperado, int):
+            nombre_esperado = TOKENS.get(esperado, f"Token {esperado}")
+        else:
+            nombre_esperado = esperado
+        
+        sugerencia = ""
+        if lexema_encontrado.lower() == str(nombre_esperado).lower():
+            sugerencia = f"\n💡 Sugerencia: Revisa las mayúsculas. ¿Quisiste decir '{nombre_esperado}'?"
+
+        raise Exception(f"\n>>> ERROR SINTÁCTICO <<<\n"
+                        f"Línea: {linea}\n"
+                        f"Se esperaba: {nombre_esperado}\n"
+                        f"Se encontró: '{lexema_encontrado}'"
+                        f"{sugerencia}")
+
     def match(self, id_esperado):
         if self.actual and self.actual.token_id == id_esperado:
-            nodo_retorno = self.actual # Guardamos para el AST
+            nodo_retorno = self.actual
             self.actual = self.actual.siguiente
             return nodo_retorno
         else:
@@ -17,15 +42,6 @@ class Sintactico:
         if self.actual:
             return self.actual.token_id
         return None
-
-    def reportar_error(self, esperado):
-        self.hay_error = True
-        lexema = self.actual.lexema if self.actual else "EOF"
-        linea = self.actual.renglon if self.actual else "Final"
-        raise Exception(f"\n>>> ERROR SINTÁCTICO <<<\n"
-                        f"Línea: {linea}\n"
-                        f"Se esperaba ID: {esperado}\n"
-                        f"Se encontró: '{lexema}'")
 
     # REGLAS GRAMATICALES 
     # <programa> ::= <clase_principal>
@@ -168,15 +184,25 @@ class Sintactico:
             izq = {"tipo": "OperacionBinaria", "op": op, "izq": izq, "der": der}
         return izq
 
-    # <factor> ::= <id> | <num> | <cadena> | "(" <expresion> ")"
+    # <factor> ::= <id> | <num> | <cadena> | "true" | "false" | "(" <expresion> ")"
     def factor(self):
-        if self.peek() in [100, 101, 102, 103]:
+        token_actual = self.peek()
+        
+        # Basado en tu archivo reserved.py:
+        # 100: IDENTIFICADOR, 101: ENTERO, 102: REAL, 103: CADENA
+        # 220: true, 221: false
+        literales_validos = [100, 101, 102, 103, 220, 221]
+
+        if token_actual in literales_validos:
             lex = self.actual.lexema
-            self.match(self.peek())
+            self.match(token_actual)
             return {"tipo": "Literal", "valor": lex}
-        elif self.peek() == 109:
+            
+        elif token_actual == 109: # L_PAREN "("
             self.match(109)
             exp = self.expresion()
-            self.match(110)
+            self.match(110) # R_PAREN ")"
             return exp
-        self.reportar_error("Valor")
+            
+        else:
+            self.reportar_error("Valor (ID, Número, Cadena o Booleano)")
