@@ -72,12 +72,18 @@ class Lexer:
 
             # Manejo de comentarios de línea (//)
             if state == 6 and char == '/':
-                 self.pos += 1 
-                 while self.pos < len(self.source) and self.source[self.pos] != '\n':
-                     self.pos += 1
-                 state = 0
-                 lexeme = ""
-                 continue
+                
+                fin_linea = self.source.find('\n', self.pos)
+
+                if fin_linea != -1:
+                    self.pos = fin_linea 
+                else:
+                    self.pos = len(self.source)
+
+                # Reset del estado
+                state = 0
+                lexeme = ""
+                continue
 
             next_state = self.matrix[state][col]
             
