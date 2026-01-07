@@ -44,6 +44,7 @@ class Sintactico:
         return None
 
     # REGLAS GRAMATICALES 
+
     # <programa> ::= <clase_principal>
     def programa(self):
         return {
@@ -188,9 +189,7 @@ class Sintactico:
     def factor(self):
         token_actual = self.peek()
         
-        # Basado en tu archivo reserved.py:
-        # 100: IDENTIFICADOR, 101: ENTERO, 102: REAL, 103: CADENA
-        # 220: true, 221: false
+ 
         literales_validos = [100, 101, 102, 103, 220, 221]
 
         if token_actual in literales_validos:
