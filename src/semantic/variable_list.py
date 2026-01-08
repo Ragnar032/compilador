@@ -9,7 +9,7 @@ class ListaVariables:
 
     def exit_scope(self):
         if len(self.scopes) > 1: self.scopes.pop()
-
+    #variable ya declarada
     def add_variable(self, name, type_str, line):
         current_scope = self.scopes[-1]
         
@@ -17,7 +17,7 @@ class ListaVariables:
             raise Exception(f"Línea {line}: La variable '{name}' ya existe en este ámbito.")
         
         current_scope[name] = {"type": type_str, "line": line}
-
+    #varaible no declarada
     def get_variable_type(self, name):
         for scope in reversed(self.scopes):
             if name in scope:

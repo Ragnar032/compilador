@@ -4,7 +4,6 @@ from src.lexer.lexer import Lexer
 from src.lexer.manager_lexer import ManagerLexer as FileManager
 from src.parser.parser import Sintactico 
 from src.parser.visualizador import generar_codigo_dot
-# --- IMPORTACIÓN AGREGADA ---
 from src.semantic.semantic import AnalizadorSemantico 
 
 def main():

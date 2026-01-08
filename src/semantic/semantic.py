@@ -1,21 +1,21 @@
-from src.lexer.tokens import TOKENS
-from src.table_types.table_types import SEMANTIC_MATRIX, INT, DBL, BOL, STR 
+# UBICACIÓN: src/semantic/semantic.py
+from src.table_types.table_types import INT, DBL, BOL, STR 
 from src.semantic.variable_list import ListaVariables
 from src.semantic.postfix import PostfixConverter
+from src.semantic.type_evaluator import TypeEvaluator  # <--- NUEVA IMPORTACIÓN
 
 class AnalizadorSemantico:
     def __init__(self, head_node):
         self.current = head_node
         self.lista_variables = ListaVariables()
+        self.evaluator = TypeEvaluator(self.lista_variables) # <--- INSTANCIA DEL EVALUADOR
         
         self.mapa_declaracion = { 
             200: INT, 201: DBL, 202: BOL, 203: STR, 
             204: "void" 
         }
-        self.mapa_literales = { 101: INT, 102: DBL, 103: STR, 220: BOL, 221: BOL }
 
     def analizar(self):
-        print("\n>>> INICIANDO ANÁLISIS SEMÁNTICO <<<")
         while self.current:
             token = self.current.token_id
             
@@ -26,43 +26,37 @@ class AnalizadorSemantico:
                 self.lista_variables.exit_scope()
                 self.avanzar()
 
-            elif token in [210, 211, 212]: 
+            elif token in [210, 211, 212]: # Modificadores
                 self.avanzar()
-            elif token == 209: # class
+            elif token == 209: # Class
                 self.avanzar() 
                 if self.current and self.current.token_id == 100:
                     self.lista_variables.add_variable(self.current.lexema, "class", self.current.renglon)
                     self.avanzar()
 
-            elif token in [215, 217]: 
+            elif token in [215, 217]: # if, while
                 self.procesar_condicion()
             
-            elif token == 208: 
+            elif token == 208: # print
                 self.procesar_print()
 
- 
-            elif token == 216: 
+            elif token == 216: # else
                 self.avanzar() 
-            
             
             elif token in self.mapa_declaracion:
                 self.procesar_declaracion()
-
             
-            elif token == 100: 
+            elif token == 100: # Variable al inicio de linea (Asignación)
                 if self.peek_token() == 121: 
-                    print(f"--- Asignación (Línea {self.current.renglon}) ---")
                     self.convertir_y_evaluar(self.current, stop_tokens=[122])
                     if self.current and self.current.token_id == 122:
                         self.avanzar()
                 else:
-                    if self.current.siguiente and self.current.siguiente.token_id == 109:
-                        self.avanzar() 
-                    else:
-                        tipo = self.lista_variables.get_variable_type(self.current.lexema)
-                        if not tipo:
-                            print(f"[ERROR SEMÁNTICO] Línea {self.current.renglon}: Variable '{self.current.lexema}' no ha sido declarada.")
-                        self.avanzar()
+                    # Si solo es una variable suelta sin asignación, verificar existencia
+                    tipo = self.lista_variables.get_variable_type(self.current.lexema)
+                    if not tipo:
+                        print(f"[ERROR SEMÁNTICO] Línea {self.current.renglon}: Variable '{self.current.lexema}' no ha sido declarada.")
+                    self.avanzar()
             else:
                 self.avanzar()
 
@@ -71,9 +65,8 @@ class AnalizadorSemantico:
         renglon = self.current.renglon
         self.avanzar()
         
-        if self.current.token_id == 109: 
+        if self.current.token_id == 109: # (
             self.avanzar()
-            print(f"--- Condición {estructura} (Línea {renglon}) ---")
             tipo_resultado = self.convertir_y_evaluar(self.current, stop_tokens=[110])
             
             if tipo_resultado != BOL and tipo_resultado != "error":
@@ -86,21 +79,21 @@ class AnalizadorSemantico:
 
     def procesar_print(self):
         renglon = self.current.renglon
-        self.avanzar() # Consumir 'print'
+        self.avanzar() 
         
-        if self.current.token_id == 109: # (
-            self.avanzar() # Consumir '('
-            
-            print(f"--- Expresión Print (Línea {renglon}) ---")
+        if self.current.token_id == 109: 
+            self.avanzar() 
             
             converter = PostfixConverter(self.current)
             rpn, nodo_final = converter.convertir(stop_tokens=[110])
             
+            # --- USO DE EVALUADOR ---
             lista_lexemas = [n.lexema.strip() for n in rpn]
-            lista_lexemas.append("print") 
+            lista_lexemas.append("print")  
             print(lista_lexemas)
             
-            self.evaluar_rpn(rpn)
+            self.evaluator.evaluar(rpn) # Delegamos la validación
+            # ------------------------
             
             self.current = nodo_final
             
@@ -125,18 +118,17 @@ class AnalizadorSemantico:
                 print(f"[ERROR SEMÁNTICO] {e}") 
             
             siguiente = self.peek_token()
-            if siguiente == 109: # funcion
+            if siguiente == 109: # Es un metodo ()
                 self.avanzar() 
                 while self.current and self.current.token_id != 110: 
                     self.avanzar()
                 self.avanzar() 
                 return 
-            elif siguiente == 121: # asignacion
-                print(f"--- Inicialización {nombre} (Línea {renglon}) ---")
+            elif siguiente == 121: # Es una inicializacion =
                 self.convertir_y_evaluar(self.current, stop_tokens=[122])
                 if self.current and self.current.token_id == 122:
                     self.avanzar()
-            else: # declaracion sola
+            else: 
                 self.avanzar() 
                 if self.current and self.current.token_id == 122:
                     self.avanzar()
@@ -151,55 +143,12 @@ class AnalizadorSemantico:
             lista_lexemas = [nodo.lexema.strip() for nodo in rpn]
             print(lista_lexemas)
         
-        tipo = self.evaluar_rpn(rpn)
+        # --- USO DE EVALUADOR ---
+        tipo = self.evaluator.evaluar(rpn) # Delegamos la validación
+        # ------------------------
+        
         self.current = nodo_final
         return tipo
-
-    def evaluar_rpn(self, lista_rpn):
-        pila = [] 
-        for nodo in lista_rpn:
-            tid = nodo.token_id
-            
-            if tid in self.mapa_literales:
-                pila.append({"tipo": self.mapa_literales[tid], "modo": "VALOR", "lexema": nodo.lexema})
-            elif tid == 100:
-                tipo = self.lista_variables.get_variable_type(nodo.lexema)
-                if not tipo:
-                    print(f"[ERROR SEMÁNTICO] Línea {nodo.renglon}: Variable '{nodo.lexema}' no ha sido declarada.")
-                    pila.append({"tipo": "error", "modo": "ID", "lexema": nodo.lexema})
-                else:
-                    pila.append({"tipo": tipo, "modo": "ID", "lexema": nodo.lexema})
-            elif tid in SEMANTIC_MATRIX:
-                if len(pila) < 2: return "error"
-                der = pila.pop()
-                izq = pila.pop()
-                self.validar_y_operar(izq, tid, der, pila, nodo.renglon)
-        
-        if pila: return pila[0]["tipo"]
-        return "void"
-
-    def validar_y_operar(self, izq, op_id, der, pila, renglon):
-        if izq["tipo"] == "error" or der["tipo"] == "error":
-            pila.append({"tipo": "error", "modo": "VALOR"})
-            return
-        
-        if op_id == 121 and izq["modo"] != "ID":
-            print(f"[ERROR SEMÁNTICO] Línea {renglon}: No se puede asignar valor a una constante.")
-            pila.append({"tipo": "error"})
-            return
-        
-        try:
-            resultado_tipo = SEMANTIC_MATRIX[op_id][izq["tipo"]][der["tipo"]]
-        except KeyError:
-            resultado_tipo = None 
-            
-        if not resultado_tipo:
-            operador_str = "ASIGNACION" if op_id == 121 else "OPERACION"
-            print(f"[ERROR SEMÁNTICO] Línea {renglon}: Tipos incompatibles en {operador_str}.")
-            print(f"    No se puede operar '{izq['tipo']}' con '{der['tipo']}'.")
-            pila.append({"tipo": "error", "modo": "VALOR"})
-        else:
-            pila.append({"tipo": resultado_tipo, "modo": "VALOR"})
 
     def avanzar(self):
         if self.current: self.current = self.current.siguiente

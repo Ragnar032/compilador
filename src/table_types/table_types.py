@@ -57,7 +57,7 @@ SEMANTIC_MATRIX[207] = {BOL: BOL}
 
 # Asignación (=)
 SEMANTIC_MATRIX[121] = {
-    INT: {INT: INT},
+    INT: {INT: INT, INT: DBL, DBL: INT},
     DBL: {INT: DBL, DBL: DBL},
     BOL: {BOL: BOL},
     STR: {STR: STR}
