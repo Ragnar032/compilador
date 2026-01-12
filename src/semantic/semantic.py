@@ -1,14 +1,14 @@
-# UBICACIÓN: src/semantic/semantic.py
+# src/semantic/semantic.py
 from src.table_types.table_types import INT, DBL, BOL, STR 
 from src.semantic.variable_list import ListaVariables
 from src.semantic.postfix import PostfixConverter
-from src.semantic.type_evaluator import TypeEvaluator  # <--- NUEVA IMPORTACIÓN
+from src.semantic.type_evaluator import TypeEvaluator  
 
 class AnalizadorSemantico:
     def __init__(self, head_node):
         self.current = head_node
         self.lista_variables = ListaVariables()
-        self.evaluator = TypeEvaluator(self.lista_variables) # <--- INSTANCIA DEL EVALUADOR
+        self.evaluator = TypeEvaluator(self.lista_variables) 
         
         self.mapa_declaracion = { 
             200: INT, 201: DBL, 202: BOL, 203: STR, 
@@ -19,40 +19,39 @@ class AnalizadorSemantico:
         while self.current:
             token = self.current.token_id
             
-            if token == 111: # {
+            if token == 111: 
                 self.lista_variables.enter_scope()
                 self.avanzar()
-            elif token == 112: # }
+            elif token == 112: 
                 self.lista_variables.exit_scope()
                 self.avanzar()
 
-            elif token in [210, 211, 212]: # Modificadores
+            elif token in [210, 211, 212]: 
                 self.avanzar()
-            elif token == 209: # Class
+            elif token == 209: 
                 self.avanzar() 
                 if self.current and self.current.token_id == 100:
                     self.lista_variables.add_variable(self.current.lexema, "class", self.current.renglon)
                     self.avanzar()
 
-            elif token in [215, 217]: # if, while
+            elif token in [215, 217]: 
                 self.procesar_condicion()
             
-            elif token == 208: # print
+            elif token == 208: 
                 self.procesar_print()
 
-            elif token == 216: # else
+            elif token == 216: 
                 self.avanzar() 
             
             elif token in self.mapa_declaracion:
                 self.procesar_declaracion()
             
-            elif token == 100: # Variable al inicio de linea (Asignación)
+            elif token == 100: 
                 if self.peek_token() == 121: 
                     self.convertir_y_evaluar(self.current, stop_tokens=[122])
                     if self.current and self.current.token_id == 122:
                         self.avanzar()
                 else:
-                    # Si solo es una variable suelta sin asignación, verificar existencia
                     tipo = self.lista_variables.get_variable_type(self.current.lexema)
                     if not tipo:
                         print(f"[ERROR SEMÁNTICO] Línea {self.current.renglon}: Variable '{self.current.lexema}' no ha sido declarada.")
@@ -65,7 +64,7 @@ class AnalizadorSemantico:
         renglon = self.current.renglon
         self.avanzar()
         
-        if self.current.token_id == 109: # (
+        if self.current.token_id == 109: 
             self.avanzar()
             tipo_resultado = self.convertir_y_evaluar(self.current, stop_tokens=[110])
             
@@ -87,13 +86,12 @@ class AnalizadorSemantico:
             converter = PostfixConverter(self.current)
             rpn, nodo_final = converter.convertir(stop_tokens=[110])
             
-            # --- USO DE EVALUADOR ---
             lista_lexemas = [n.lexema.strip() for n in rpn]
             lista_lexemas.append("print")  
             print(lista_lexemas)
             
-            self.evaluator.evaluar(rpn) # Delegamos la validación
-            # ------------------------
+            self.evaluator.evaluar(rpn) 
+            
             
             self.current = nodo_final
             
@@ -118,13 +116,13 @@ class AnalizadorSemantico:
                 print(f"[ERROR SEMÁNTICO] {e}") 
             
             siguiente = self.peek_token()
-            if siguiente == 109: # Es un metodo ()
+            if siguiente == 109: 
                 self.avanzar() 
                 while self.current and self.current.token_id != 110: 
                     self.avanzar()
                 self.avanzar() 
                 return 
-            elif siguiente == 121: # Es una inicializacion =
+            elif siguiente == 121: 
                 self.convertir_y_evaluar(self.current, stop_tokens=[122])
                 if self.current and self.current.token_id == 122:
                     self.avanzar()
@@ -143,9 +141,8 @@ class AnalizadorSemantico:
             lista_lexemas = [nodo.lexema.strip() for nodo in rpn]
             print(lista_lexemas)
         
-        # --- USO DE EVALUADOR ---
-        tipo = self.evaluator.evaluar(rpn) # Delegamos la validación
-        # ------------------------
+        tipo = self.evaluator.evaluar(rpn) 
+        
         
         self.current = nodo_final
         return tipo

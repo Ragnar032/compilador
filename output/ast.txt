@@ -27,11 +27,11 @@
                     },
                     {
                         "tipo": "Declaracion",
-                        "dt": "int",
+                        "dt": "String",
                         "id": "b",
                         "valor": {
                             "tipo": "Literal",
-                            "valor": "20"
+                            "valor": "\" hola\""
                         }
                     },
                     {
