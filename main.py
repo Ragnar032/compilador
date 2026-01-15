@@ -5,6 +5,7 @@ from src.lexer.manager_lexer import ManagerLexer as FileManager
 from src.parser.parser import Sintactico 
 from src.parser.visualizador import generar_codigo_dot
 from src.semantic.semantic import AnalizadorSemantico 
+from src.intermediate.generator import IntermediateGenerator 
 
 def main():
     ruta_input = os.path.join("input", "codigo.txt")
@@ -41,6 +42,14 @@ def main():
 
                 semantico = AnalizadorSemantico(lista_para_semantico)
                 semantico.analizar()
+
+                print("\n--- INICIANDO GENERACIÓN DE CÓDIGO INTERMEDIO ---")
+                
+                lexer_intermedio = Lexer(codigo_fuente)
+                lista_para_intermedio = lexer_intermedio.run()
+
+                generador = IntermediateGenerator(lista_para_intermedio)
+                generador.generar()
                 
         except Exception as e:
             print(f"\n[ERROR]: {e}")

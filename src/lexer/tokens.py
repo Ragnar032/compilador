@@ -27,6 +27,7 @@ TOKENS = {
     122: "PUNTO_COMA", 
     123: "COMA", 
     124: "PUNTO",
+    125: "MENOS_UNARIO",
     **{v: k for k, v in RESERVED_WORDS.items()},
     **ERRORS,
 }
