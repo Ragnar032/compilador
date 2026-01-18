@@ -3,17 +3,15 @@
 class TacManager:
     def __init__(self):
         self.code = []
-        self.temp_count = 1  # Empezamos en T1
+        self.temp_count = 1  # T1
         self.label_count = 0
 
     def new_temp(self):
-        """Genera T1, T2, T3..."""
         t = f"T{self.temp_count}"
         self.temp_count += 1
         return t
 
     def new_label(self):
-        """Genera L0, L1, L2... (Equivalentes a tus A, B)"""
         l = f"L{self.label_count}"
         self.label_count += 1
         return l
@@ -22,7 +20,6 @@ class TacManager:
         self.code.append((op, arg1, arg2, res))
 
     def emit_label(self, label):
-        # Guardamos la etiqueta como una instrucción especial
         self.code.append(("LABEL", None, None, label))
 
     def print_code(self):
