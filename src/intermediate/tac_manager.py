@@ -31,7 +31,6 @@ class TacManager:
 
         for op, arg1, arg2, res in self.code:
             if op == "LABEL":
-                # Imprimimos la etiqueta sola (ej: "L0:")
                 print(f"{res + ':':<10} | {'':<10} | {'':<10} | {'':<10}")
             else:
                 s_op = str(op)
