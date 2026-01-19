@@ -6,7 +6,7 @@ public class MiPrograma {
         int b = 10;
         int resultado = (a + b) * 5; 
 
-        if (resultado > 50) {
+        if (resultado > 50+4) {
             int x = 1;
             while (x < 10) {
                 x = x + 1;

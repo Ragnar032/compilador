@@ -28,7 +28,7 @@ class IntermediateGenerator:
                 self.cerrar_bloque()
                 self.avanzar()
 
-            elif tid == 100: 
+            elif tid == 100: # Identificador
                 if self.peek_token() == 121: 
                     self.procesar_expresion(stop_tokens=[122]) 
                     if self.current and self.current.token_id == 122:
@@ -38,7 +38,7 @@ class IntermediateGenerator:
                 else:
                     self.avanzar()
 
-            elif tid == 208: 
+            elif tid == 208: # print
                 self.procesar_print()
 
             else:

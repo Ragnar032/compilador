@@ -63,14 +63,22 @@
                         "tipo": "If",
                         "condicion": {
                             "tipo": "OperacionBinaria",
-                            "op": "> ",
+                            "op": "+",
                             "izq": {
-                                "tipo": "Literal",
-                                "valor": "resultado"
+                                "tipo": "OperacionBinaria",
+                                "op": "> ",
+                                "izq": {
+                                    "tipo": "Literal",
+                                    "valor": "resultado"
+                                },
+                                "der": {
+                                    "tipo": "Literal",
+                                    "valor": "50"
+                                }
                             },
                             "der": {
                                 "tipo": "Literal",
-                                "valor": "50"
+                                "valor": "4"
                             }
                         },
                         "bloque_if": [
