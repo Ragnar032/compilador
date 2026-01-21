@@ -269,7 +269,7 @@ ITOA    MACRO BUFFER, NUMERO
     def es_variable(self, val):
         if not val: return False
         s_val = str(val)
-        if s_val.startswith("'") or s_val.startswith('"'): return False
+        if s_val.startswith('"'): return False
         if s_val.replace("-", "").isdigit(): return False
         if s_val.startswith("L") and s_val[1:].isdigit(): return False
         return True
