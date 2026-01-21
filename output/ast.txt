@@ -5,15 +5,6 @@
         "nombre": "MiPrograma",
         "cuerpo": [
             {
-                "tipo": "Declaracion",
-                "dt": "int",
-                "id": "variableGlobal",
-                "valor": {
-                    "tipo": "Literal",
-                    "valor": "100"
-                }
-            },
-            {
                 "tipo": "MetodoMain",
                 "sentencias": [
                     {
@@ -37,21 +28,37 @@
                     {
                         "tipo": "Declaracion",
                         "dt": "int",
+                        "id": "suma",
+                        "valor": {
+                            "tipo": "OperacionBinaria",
+                            "op": "+",
+                            "izq": {
+                                "tipo": "Literal",
+                                "valor": "a"
+                            },
+                            "der": {
+                                "tipo": "Literal",
+                                "valor": "b"
+                            }
+                        }
+                    },
+                    {
+                        "tipo": "Impresion",
+                        "argumento": {
+                            "tipo": "Literal",
+                            "valor": "suma"
+                        }
+                    },
+                    {
+                        "tipo": "Declaracion",
+                        "dt": "int",
                         "id": "resultado",
                         "valor": {
                             "tipo": "OperacionBinaria",
                             "op": "*",
                             "izq": {
-                                "tipo": "OperacionBinaria",
-                                "op": "+",
-                                "izq": {
-                                    "tipo": "Literal",
-                                    "valor": "a"
-                                },
-                                "der": {
-                                    "tipo": "Literal",
-                                    "valor": "b"
-                                }
+                                "tipo": "Literal",
+                                "valor": "suma"
                             },
                             "der": {
                                 "tipo": "Literal",
@@ -60,28 +67,34 @@
                         }
                     },
                     {
+                        "tipo": "Impresion",
+                        "argumento": {
+                            "tipo": "Literal",
+                            "valor": "resultado"
+                        }
+                    },
+                    {
                         "tipo": "If",
                         "condicion": {
                             "tipo": "OperacionBinaria",
-                            "op": "+",
+                            "op": "> ",
                             "izq": {
-                                "tipo": "OperacionBinaria",
-                                "op": "> ",
-                                "izq": {
-                                    "tipo": "Literal",
-                                    "valor": "resultado"
-                                },
-                                "der": {
-                                    "tipo": "Literal",
-                                    "valor": "50"
-                                }
+                                "tipo": "Literal",
+                                "valor": "resultado"
                             },
                             "der": {
                                 "tipo": "Literal",
-                                "valor": "4"
+                                "valor": "54"
                             }
                         },
                         "bloque_if": [
+                            {
+                                "tipo": "Impresion",
+                                "argumento": {
+                                    "tipo": "Literal",
+                                    "valor": "1111"
+                                }
+                            },
                             {
                                 "tipo": "Declaracion",
                                 "dt": "int",
@@ -102,7 +115,7 @@
                                     },
                                     "der": {
                                         "tipo": "Literal",
-                                        "valor": "10"
+                                        "valor": "5"
                                     }
                                 },
                                 "cuerpo": [
@@ -123,9 +136,24 @@
                                         }
                                     }
                                 ]
+                            },
+                            {
+                                "tipo": "Asignacion",
+                                "id": "resultado",
+                                "valor": {
+                                    "tipo": "Literal",
+                                    "valor": "x"
+                                }
                             }
                         ],
                         "bloque_else": [
+                            {
+                                "tipo": "Impresion",
+                                "argumento": {
+                                    "tipo": "Literal",
+                                    "valor": "2222"
+                                }
+                            },
                             {
                                 "tipo": "Asignacion",
                                 "id": "resultado",
@@ -150,4 +178,3 @@
 }
 
 ¡Análisis Sintáctico Exitoso!
-El código cumple con todas las reglas gramaticales BNF.

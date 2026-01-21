@@ -30,22 +30,17 @@ def main():
                 with open(ruta_ast_output, 'w', encoding='utf-8') as f:
                     f.write(json.dumps(resultado_ast, indent=4, ensure_ascii=False))
                     f.write("\n\n¡Análisis Sintáctico Exitoso!\n")
-                    f.write("El código cumple con todas las reglas gramaticales BNF.")
-                
+
                 codigo_dot = generar_codigo_dot(resultado_ast)
                 with open(ruta_grafo_output, 'w', encoding='utf-8') as f:
                     f.write(codigo_dot)
                 
-                print("Análisis sintáctico completado sin errores.")
 
-                print("\n--- INICIANDO ANÁLISIS SEMÁNTICO ---")
                 lexer_semantico = Lexer(codigo_fuente)
                 lista_para_semantico = lexer_semantico.run()
 
                 semantico = AnalizadorSemantico(lista_para_semantico)
                 semantico.analizar()
-
-                print("\n--- INICIANDO GENERACIÓN DE CÓDIGO INTERMEDIO ---")
                 
                 lexer_intermedio = Lexer(codigo_fuente)
                 lista_para_intermedio = lexer_intermedio.run()
@@ -53,7 +48,7 @@ def main():
                 generador = IntermediateGenerator(lista_para_intermedio)
                 generador.generar()
 
-                print("\n--- INICIANDO GENERACIÓN DE CÓDIGO OBJETIVO (ENSAMBLADOR) ---")
+                print("\n--- INICIANDO GENERACIÓN DE CÓDIGO OBJETIVO ---")
                 
                 target_gen = TargetGenerator(generador.tac.code)
                 
@@ -63,7 +58,6 @@ def main():
                     f.write(codigo_asm)
                     
                 print(f"¡Código ensamblador generado exitosamente en: {ruta_asm_output}!")
-                print("Recuerda tener el archivo 'macros.inc' en la misma carpeta para compilarlo.")
                 
         except Exception as e:
             print(f"\n[ERROR]: {e}")

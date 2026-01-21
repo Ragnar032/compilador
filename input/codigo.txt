@@ -1,17 +1,31 @@
 public class MiPrograma {
-    int variableGlobal = 100;
-
     public static void main() {
         int a = 10; 
         int b = 10;
-        int resultado = (a + b) * 5; 
+        
+        // 1. Probamos la suma
+        int suma = a + b;
+        print(suma); // DEBERÍA IMPRIMIR: 20
+        
+        // 2. Probamos la multiplicacion
+        int resultado = suma * 5; 
+        print(resultado); // DEBERÍA IMPRIMIR: 100
 
-        if (resultado > 50+4) {
+        // 3. Probamos el IF
+        // Si resultado es 100, 100 > 54 es VERDADERO.
+        if (resultado > 54) {
+            // Si vemos un 1111, es que ENTRO al IF correctamente
+            print(1111);
+            
             int x = 1;
-            while (x < 10) {
+            while (x < 5) {
                 x = x + 1;
             }
+            // Si el while funciona, x debería ser 5
+            resultado = x; 
         } else {
+            // Si vemos un 2222, es que el IF FALLÓ (Falso positivo)
+            print(2222);
             resultado = 0;
         }
 

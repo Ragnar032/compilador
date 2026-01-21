@@ -48,12 +48,12 @@ class IntermediateGenerator:
 
 
     def procesar_if(self):
-        self.avanzar() #  'if'
-        self.avanzar() #  '('
+        self.avanzar() # 'if'
+        self.avanzar() # '('
         
         cond_temp = self.procesar_expresion(stop_tokens=[110])
         
-        if self.current.token_id == 110: self.avanzar() #  ')'
+        if self.current.token_id == 110: self.avanzar() # ')'
         else:print(f"Error: Se esperaba ')' después de la condición en línea {self.current.linea if self.current else '?'}")
         
         L_false = self.tac.new_label()
@@ -67,22 +67,20 @@ class IntermediateGenerator:
         if self.control_stack:
             tipo, L_false = self.control_stack.pop()
             
- 
             L_final = self.tac.new_label()
-            self.tac.emit("Br", None, None, L_final)
+            self.tac.emit("Br", None, None, L_final) 
             
-            self.tac.emit_label(L_false)
+            self.tac.emit_label(L_false) 
             
             self.control_stack.append(("ELSE", L_final))
 
-  
     def procesar_while(self):
-        self.avanzar() #  'while'
+        self.avanzar() # 'while'
         
         L_inicio = self.tac.new_label()
         self.tac.emit_label(L_inicio)
         
-        self.avanzar() #  '('
+        self.avanzar() # '('
         cond_temp = self.procesar_expresion(stop_tokens=[110])
         
         L_salida = self.tac.new_label()
@@ -94,25 +92,31 @@ class IntermediateGenerator:
         self.control_stack.append(("WHILE", L_salida, L_inicio))
 
     def cerrar_bloque(self):
-        if self.control_stack:
-            datos = self.control_stack.pop()
-            tipo = datos[0]
+        if not self.control_stack:
+            return
+        datos = self.control_stack[-1]
+        tipo = datos[0]
+        
+        if tipo == "IF":
+            if self.peek_token() == 216:
+                return
+            else:
+                self.control_stack.pop()
+                L_salida = datos[1]
+                self.tac.emit_label(L_salida)
+                
+        elif tipo == "ELSE":
+            self.control_stack.pop()
+            L_final = datos[1]
+            self.tac.emit_label(L_final)
             
-            if tipo == "IF":
-                L_salida = datos[1]
-                self.tac.emit_label(L_salida)
-                
-            elif tipo == "ELSE":
-                L_final = datos[1]
-                self.tac.emit_label(L_final)
-                
-            elif tipo == "WHILE":
-                L_salida = datos[1]
-                L_inicio = datos[2]
-                self.tac.emit("Br", None, None, L_inicio)
-                self.tac.emit_label(L_salida)
+        elif tipo == "WHILE":
+            self.control_stack.pop()
+            L_salida = datos[1]
+            L_inicio = datos[2]
+            self.tac.emit("Br", None, None, L_inicio)
+            self.tac.emit_label(L_salida)
 
-  
     def procesar_expresion(self, stop_tokens):
         converter = PostfixConverter(self.current)
         rpn_list, nodo_final = converter.convertir(stop_tokens)
