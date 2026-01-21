@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+
+.vscode/
+.idea/
+.DS_Store
+
+output/
+tests/
+*.exe
+*.obj
+*.map
