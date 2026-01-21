@@ -6,12 +6,14 @@ from src.parser.parser import Sintactico
 from src.parser.visualizador import generar_codigo_dot
 from src.semantic.semantic import AnalizadorSemantico 
 from src.intermediate.generator import IntermediateGenerator 
+from src.asm.target_gen import TargetGenerator 
 
 def main():
     ruta_input = os.path.join("input", "codigo.txt")
     ruta_output = os.path.join("output", "lista_tokens.txt")
     ruta_ast_output = os.path.join("output", "ast.txt")
     ruta_grafo_output = os.path.join("output", "ast.dot")
+    ruta_asm_output = os.path.join("output", "program.asm")
     
     codigo_fuente = FileManager.leer_archivo(ruta_input)
     
@@ -50,6 +52,18 @@ def main():
 
                 generador = IntermediateGenerator(lista_para_intermedio)
                 generador.generar()
+
+                print("\n--- INICIANDO GENERACIÓN DE CÓDIGO OBJETIVO (ENSAMBLADOR) ---")
+                
+                target_gen = TargetGenerator(generador.tac.code)
+                
+                codigo_asm = target_gen.generar_asm()
+                
+                with open(ruta_asm_output, 'w', encoding='utf-8') as f:
+                    f.write(codigo_asm)
+                    
+                print(f"¡Código ensamblador generado exitosamente en: {ruta_asm_output}!")
+                print("Recuerda tener el archivo 'macros.inc' en la misma carpeta para compilarlo.")
                 
         except Exception as e:
             print(f"\n[ERROR]: {e}")
