@@ -1,10 +1,5 @@
-import os
-
 class TargetGenerator:
     def __init__(self, tac_code):
-        print("\n" + "!"*50)
-        print("[DEBUG] INICIANDO GENERADOR - VERSION DIAGNOSTICO")
-        print("!"*50 + "\n")
         self.tac_code = tac_code
         self.output_asm = []
         self.variables = set()
